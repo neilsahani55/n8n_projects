@@ -1,0 +1,47 @@
+PROJECT NAME:
+PageIntel Flow – URL-to-Insight Automation Engine
+
+==============================================================================
+1. PROJECT EXPLANATION
+==============================================================================
+
+PageIntel Flow is a full-stack automated auditing system designed to bridge the gap between simple web scraping and deep content intelligence. Unlike standard SEO tools that just check for broken links, this system uses Large Language Models (LLMs) to "read" and understand a webpage like a human editor would.
+
+The solution consists of a custom frontend (HTML/JS) where users paste a URL, and a sophisticated backend workflow powered by n8n. The system automatically fetches the page, scrapes the content, and passes it through a Multi-LLM Chain (supporting Google Gemini and OpenRouter).
+
+The result is a comprehensive intelligence report covering:
+- Structural SEO (Meta titles, descriptions, headers)
+- Content Quality (Grammar, readability, clarity)
+- Page Health (Optimization gaps and suggestions)
+
+This architecture eliminates manual analysis, providing a complete "URL-to-Insight" pipeline in seconds.
+
+==============================================================================
+2. WORKFLOW NODE BREAKDOWN
+==============================================================================
+
+Below is the technical breakdown of the nodes used in the n8n workflow, following the execution path from start to finish.
+
+1. Webhook (Trigger)
+   - Function: The entry point. Receives the POST request from the frontend containing the target "URL" to be analyzed.
+
+2. Edit Fields (Data Prep)
+   - Function: Standardizes the incoming data, ensuring the URL string is clean and ready for the HTTP request.
+
+3. HTTP Request (Fetcher)
+   - Function: Acts as the "Scraper." It makes a GET request to the target URL to retrieve the raw HTML content of the page.
+
+4. Code in JavaScript (Parser)
+   - Function: Cleans the raw HTML. It likely strips away unnecessary code (scripts, styles) to extract just the readable text and metadata (Title, Description) for the AI to analyze.
+
+5. Basic LLM Chain (The Brain)
+   - Function: The core analysis engine. It takes the cleaned text and runs it against a sophisticated prompt to audit the content.
+   - Dual-Model Support: This node is connected to two AI models:
+     a. Google Gemini Chat Model (Primary): For fast, high-context analysis.
+     b. OpenRouter Chat Model (Fallback): Ensures reliability and offers model flexibility if the primary one fails.
+
+6. Code in JavaScript (Formatter)
+   - Function: Post-processing. It takes the raw text response from the AI and structures it into a clean JSON object (e.g., separating "SEO Score" from "Grammar Suggestions") for the frontend to render.
+
+7. Respond to Webhook
+   - Function: Final delivery. Sends the structured report back to the user's browser, displaying the insights instantly.
