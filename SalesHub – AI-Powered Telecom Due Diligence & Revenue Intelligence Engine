@@ -1,0 +1,314 @@
+# PROJECT NAME:
+
+SalesHub – AI-Powered Telecom Due Diligence & Revenue Intelligence Engine
+
+==============================================================================
+
+1. PROJECT EXPLANATION
+   ==============================================================================
+
+SalesHub is an enterprise-grade automation system designed to perform deep telecom corporate due diligence combined with live revenue intelligence.
+
+Unlike simple company lookup tools, SalesHub integrates:
+
+* Regulatory data (FCC, RMD, FRN)
+* API-based compliance verification
+* Revenue analytics
+* Interconnect intelligence
+* AI-powered risk assessment
+* Tier-based credit recommendations
+* Tailored business opportunity mapping
+
+The system is built entirely in n8n and exposed via a Webhook endpoint. It accepts:
+
+* Our Company Name
+* Target Company Name
+* Target Company Website URL
+
+SalesHub then automatically:
+
+1. Extracts official company identity from website
+2. Pulls FCC and RMD data via API
+3. Normalizes regulatory records
+4. Merges compliance + API intelligence
+5. Generates a full Due Diligence report using an advanced AI Agent
+6. Fetches revenue analytics
+7. Formats structured Markdown revenue dashboards
+8. Delivers a complete structured intelligence report
+
+This creates a powerful **Company → Compliance → Revenue → Risk → Opportunity** automation pipeline.
+
+==============================================================================
+2. WORKFLOW NODE BREAKDOWN
+==========================
+
+Below is the technical breakdown of the nodes used in the n8n workflow, following execution logic.
+
+---
+
+## 🔹 LAYER 1 – ENTRY & ROUTING
+
+1. Webhook (Trigger)
+
+   * Entry point of the system
+   * Receives POST request with:
+
+     * OurCompanyName
+     * Company Name
+     * Company URL
+   * Response mode handled by Respond to Webhook nodes
+
+2. Edit Fields
+
+   * Standardizes incoming data
+   * Extracts:
+
+     * OurCompanyName
+     * CompanyName
+     * CompanyURL
+
+3. Switch Node
+
+   * Routes execution based on OurCompanyName
+   * Enables multi-brand intelligence mode
+   * Supports:
+
+     * MCM
+     * AcePeak
+     * TechOpenSystem
+     * LetsDial
+     * SoftTop
+     * Teloz
+     * Ajoxi
+     * Rozper
+     * Meratalk
+   * Each branch injects brand-specific strategy logic
+
+---
+
+## 🔹 LAYER 2 – COMPANY IDENTITY & REGULATORY DATA
+
+4. CompanyName (LLM Extraction Node)
+
+   * Extracts official company name from URL
+   * Removes suffixes like LLC, Inc, Ltd
+   * Ensures clean legal entity matching
+
+5. DataExpress (FCC API Lookup)
+
+   * Calls external FCC Search API
+   * Retrieves:
+
+     * 499 Filer ID
+     * Registration number
+     * Legal entity name
+     * Headquarters details
+
+6. Code in JavaScript (Data Normalizer)
+
+   * Converts API response into structured JSON
+   * Normalizes labels into safe keys
+   * Handles duplicate fields
+   * Extracts RMD data
+
+7. Edit Fields (Regulatory Mapping)
+
+   * Maps structured fields:
+
+     * 499 Filer ID
+     * FRN Number
+     * RMD Registration
+     * Registration Date
+     * Address
+     * Contact details
+
+---
+
+## 🔹 LAYER 3 – AI DUE DILIGENCE ENGINE
+
+8. AI Agent (Core Intelligence Engine)
+
+   * Executes a multi-phase telecom due diligence protocol
+
+   PHASE I – Website Discovery
+
+   * Legal names
+   * Addresses
+   * Incorporation details
+   * Technology stack
+   * Network footprint
+   * Compliance claims
+
+   PHASE II – Data Fusion
+
+   * Cross-checks:
+
+     * FCC Filer ID
+     * FRN
+     * RMD
+     * Registration numbers
+   * Flags discrepancies
+
+   PHASE III – Market & Reputation Intelligence
+
+   * LinkedIn
+   * Crunchbase
+   * Wikipedia
+   * Social footprint
+   * News (last 24 months)
+   * Fraud history
+   * Risk analysis
+
+   Outputs structured intelligence including:
+
+   * Company Overview
+   * Key Highlights
+   * Leadership & Management
+   * Compliance & Licenses
+   * Risk Level (Low / Moderate / High)
+   * Tier Ranking (Tier 1 / Tier 2 / Tier 3)
+   * Credit Recommendation
+   * Strategic Business Opportunities
+   * STIR/SHAKEN analysis
+
+9. OpenRouter Chat Model (Gemini 3 Pro)
+
+   * High-context intelligence processing
+   * Handles deep regulatory + market reasoning
+   * Ensures structured output
+
+---
+
+## 🔹 LAYER 4 – REVENUE INTELLIGENCE MODULE
+
+10. HTTP Request (Revenue API)
+
+* Calls internal revenue intelligence endpoint
+* Retrieves:
+
+  * Revenue summary
+  * Top countries
+  * Interconnected carriers
+  * Last revenue date
+
+11. Revenue (Data Mapping Node)
+
+* Structures revenue response
+* Prepares clean input for AI formatting
+
+12. Basic LLM Chain (Revenue Formatter)
+
+* Converts raw revenue data into clean Markdown
+* Creates:
+
+  * Revenue Summary Table
+  * Country-wise Revenue Table
+  * Interconnection Cards
+* Removes raw JSON
+
+---
+
+## 🔹 LAYER 5 – DELIVERY
+
+13. Edit Fields (Final Merge Layer)
+
+* Combines:
+
+  * Due Diligence Report
+  * Revenue Intelligence Report
+
+14. Respond to Webhook
+
+* Sends final structured report back to frontend
+* Enables real-time dashboard rendering
+
+==============================================================================
+3. SYSTEM ARCHITECTURE SUMMARY
+==============================
+
+Frontend
+↓
+Webhook Trigger
+↓
+Brand Routing (Switch)
+↓
+Company Name Extraction (LLM)
+↓
+FCC & RMD API Lookup
+↓
+Data Normalization
+↓
+AI Due Diligence Agent
+↓
+Revenue API Intelligence
+↓
+Revenue Markdown Formatter
+↓
+Structured Intelligence Merge
+↓
+Webhook Response
+
+==============================================================================
+4. CORE CAPABILITIES
+====================
+
+• Automated FCC & RMD cross-verification
+• Regulatory discrepancy detection
+• Telecom carrier compliance analysis
+• Risk scoring engine
+• Tier-based ranking logic
+• Credit limit recommendation ($500 – $5000 logic)
+• STIR/SHAKEN compliance insights
+• Revenue breakdown dashboards
+• Interconnect intelligence mapping
+• Brand-specific strategy injection
+• Multi-company routing architecture
+
+==============================================================================
+5. WHY SALES HUB IS POWERFUL
+============================
+
+Traditional telecom due diligence requires:
+
+* Manual FCC lookup
+* Manual RMD validation
+* LinkedIn research
+* News scanning
+* Revenue spreadsheet analysis
+* Credit evaluation
+
+SalesHub automates all of this in one intelligent pipeline.
+
+It bridges compliance intelligence + commercial intelligence in a single automated engine.
+
+==============================================================================
+6. USE CASES
+============
+
+* Wholesale Voice Carrier Evaluation
+* CPaaS / UCaaS Partner Screening
+* Telecom Interconnect Risk Assessment
+* Carrier Credit Decision Support
+* Strategic Revenue Mapping
+* Fraud & Compliance Pre-Check
+* Business Development Intelligence
+
+==============================================================================
+7. FUTURE ENHANCEMENTS
+======================
+
+* Automated confidence scoring
+* Regulatory change monitoring alerts
+* Historical revenue trend charts
+* Fraud pattern detection engine
+* Multi-region compliance expansion
+* AI-powered negotiation strategy generator
+* Dashboard UI for Sales Teams
+
+==============================================================================
+8. AUTHOR
+=========
+
+Neel Sahani
+Automation & AI Workflow Engineer
+Building AI-driven compliance and revenue intelligence systems using n8n + LLM architectures.
