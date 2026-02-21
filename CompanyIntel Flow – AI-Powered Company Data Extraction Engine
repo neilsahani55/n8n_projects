@@ -1,0 +1,190 @@
+# PROJECT NAME:
+
+CompanyIntel Flow – AI-Powered Company Data Extraction Engine
+
+==============================================================================
+
+1. PROJECT EXPLANATION
+   ==============================================================================
+
+CompanyIntel Flow is a fully automated AI-powered data enrichment system designed to transform a simple company name into verified business intelligence.
+
+Unlike traditional scraping tools that rely on brittle selectors or static directories, this system leverages Large Language Models (LLMs) to perform contextual company research. It reads and cross-verifies publicly available information across multiple sources, then returns structured, reliable contact data in strict JSON format.
+
+The solution is built entirely in **n8n**, using Google Sheets as both the input and output database. Users simply provide a list of company names, and the workflow automatically:
+
+* Reads each company name
+* Researches verified public contact information
+* Cleans and validates structured AI output
+* Writes enriched data into a final sheet
+
+The result is a scalable, AI-driven “Company Name → Verified Contact Intelligence” pipeline.
+
+This eliminates manual research, copy-paste work, and unreliable scraping scripts.
+
+==============================================================================
+2. WORKFLOW NODE BREAKDOWN
+==========================
+
+Below is the technical breakdown of the nodes used in the n8n workflow, following the execution path from start to finish.
+
+1. Manual Trigger (Workflow Start)
+
+   * Function: Entry point of the automation. Executes the workflow when “Test Workflow” is clicked.
+   * Purpose: Used for controlled batch execution during development or scheduled runs.
+
+2. Workflow Configuration (Set Node)
+
+   * Function: Initializes workflow variables and prepares configuration fields if needed.
+   * Purpose: Acts as a setup layer before processing company data.
+
+3. Google Sheets – Read Company Names
+
+   * Function: Fetches company names from the input sheet.
+   * Purpose: Serves as the primary data source for the workflow.
+   * Input: Column containing company_name.
+
+4. Split in Batches (Loop Over Companies)
+
+   * Function: Processes one company at a time.
+   * Purpose:
+
+     * Prevents API rate limit issues
+     * Improves stability
+     * Ensures clean per-company processing
+     * Enables scalable batch enrichment
+
+5. AI Research Agent (LangChain Agent Node)
+
+   * Function: Core intelligence layer of the system.
+   * Behavior:
+
+     * Accepts company name as input
+     * Uses a strict system prompt enforcing JSON-only output
+     * Searches and verifies publicly available data
+     * Returns structured output
+
+   Required JSON Schema:
+
+   {
+   "companyName": "string | null",
+   "emailId": "string | null",
+   "contactNumber": "string | null",
+   "companyWebUrl": "string | null"
+   }
+
+   Guardrails Implemented:
+
+   * No guessing allowed
+   * Return null if unverifiable
+   * Normalize phone numbers to international format
+   * Prefer official corporate sources
+
+6. OpenRouter Chat Model (AI Model Layer)
+
+   * Model Used: google/gemini-2.5-flash-lite
+   * Function: Executes the language model reasoning.
+   * Purpose:
+
+     * Performs contextual company research
+     * Generates structured JSON output
+     * Enables model flexibility via OpenRouter
+
+7. Code in JavaScript (JSON Sanitizer & Validator)
+
+   * Function: Post-processes AI output.
+   * Responsibilities:
+
+     * Removes markdown formatting (```json)
+     * Safely parses JSON
+     * Applies null fallback protection
+     * Trims and normalizes fields
+   * Purpose: Prevents workflow crashes from malformed AI responses.
+
+8. Edit Fields (Field Mapper)
+
+   * Function: Maps AI JSON fields to Google Sheet column schema.
+   * Output Fields:
+
+     * Company Name
+     * Contact Number
+     * Email ID
+     * Company Web URL
+
+9. Google Sheets – Append or Update
+
+   * Function: Writes structured output into final sheet.
+   * Mode: Append or Update (based on matching columns).
+   * Purpose:
+
+     * Maintains enriched dataset
+     * Prevents duplicates
+     * Creates structured company directory
+
+10. Loop Continuation
+
+* Function: Returns to Split in Batches node.
+* Purpose: Continues processing next company until list is complete.
+
+==============================================================================
+3. SYSTEM ARCHITECTURE SUMMARY
+==============================
+
+Input Layer:
+Google Sheets (Company Names)
+
+Processing Layer:
+n8n Automation Engine
+↓
+AI Research Agent (LangChain)
+↓
+OpenRouter (Gemini Model)
+↓
+JavaScript Validation Layer
+
+Output Layer:
+Google Sheets (Structured Company Intelligence)
+
+==============================================================================
+4. KEY FEATURES
+===============
+
+* AI-driven company research
+* Strict JSON schema enforcement
+* Batch processing architecture
+* Markdown stripping & safe parsing
+* Null fallback handling
+* International phone normalization
+* Append-or-update logic
+* Fully automated lead enrichment
+
+==============================================================================
+5. USE CASES
+============
+
+* B2B lead enrichment
+* Sales prospecting automation
+* CRM data cleaning
+* Market research
+* Business directory creation
+* AI-powered contact intelligence system
+
+==============================================================================
+6. FUTURE ENHANCEMENTS
+======================
+
+* Add LinkedIn company URL extraction
+* Integrate email verification API
+* Add confidence scoring system
+* Add retry logic for AI failures
+* Connect to CRM systems (HubSpot / Zoho / Salesforce)
+* Add logging and analytics dashboard
+
+==============================================================================
+7. AUTHOR
+=========
+
+Neel Sahani
+Automation & AI Workflow Engineer
+Building intelligent AI-first automation systems using n8n and LLMs.
+
